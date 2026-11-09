@@ -88,6 +88,15 @@ def pedir_fecha():
         return None
 
 
+def pedir_hora():
+    """Acepta 9:30 o 09:30 y la devuelve siempre como HH:MM."""
+    try:
+        return datetime.strptime(input("Hora (HH:MM): ").strip(), "%H:%M").strftime("%H:%M")
+    except ValueError:
+        print("Hora inválida.")
+        return None
+
+
 # ---------- Opciones del menú ----------
 
 def registrar_paciente(consultorio):
@@ -123,7 +132,9 @@ def dar_turno(consultorio):
     hora = None
     horario = profesional.horario_del_dia(fecha)
     if horario and horario.es_con_turno():
-        hora = input("Hora (HH:MM): ")
+        hora = pedir_hora()
+        if hora is None:
+            return
     try:
         turno = consultorio.dar_turno(paciente, profesional, fecha, hora)
         print("Turno asignado ->", turno.mostrar())
